@@ -1,0 +1,40 @@
+{{define "content"}}
+<div class="max-w-md mx-auto mt-8">
+  <div class="card p-8 rounded-2xl">
+    <h1 class="text-2xl font-bold mb-1">Create your account</h1>
+    <p class="text-gray-500 text-sm mb-6">New users get the <span class="text-violet-400">player</span> role automatically.</p>
+
+    <form method="POST" action="/register" class="space-y-4">
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Username</label>
+        <input class="input" type="text" name="username" required autofocus placeholder="gamer_tag">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Email</label>
+        <input class="input" type="email" name="email" required placeholder="you@example.com">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Password</label>
+        <input class="input" type="password" name="password" required placeholder="At least 6 characters">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Confirm Password</label>
+        <input class="input" type="password" name="confirm_password" required placeholder="Same password again">
+      </div>
+      <button type="submit" class="btn-primary w-full py-2.5 mt-2">Create Account</button>
+    </form>
+
+    <p class="text-center text-sm text-gray-500 mt-5">
+      Already have an account? <a href="/login" class="text-violet-400 hover:underline">Login</a>
+    </p>
+
+    <div class="mt-6 p-3 bg-gray-900 rounded-lg text-xs text-gray-500 space-y-1">
+      <p class="text-gray-400 font-medium">🧠 What happens here:</p>
+      <p>1. Password hashed with bcrypt (cost=12, includes random salt)</p>
+      <p>2. User saved to SQLite with role="player"</p>
+      <p>3. JWT auto-generated → you're immediately logged in</p>
+      <p>💡 To make yourself admin: update role="admin" in gamelog.db</p>
+    </div>
+  </div>
+</div>
+{{end}}

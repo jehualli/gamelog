@@ -1,0 +1,22 @@
+# LEARN — Casbin Policy File
+# Each line is a rule. Format: p, subject, action
+# p = permission rule
+# g = role inheritance rule (g, child_role, parent_role)
+#
+# To add a new permission: add a line, restart the app — no code change needed.
+# To promote a user to admin: change their Role field in the database.
+
+# ── player permissions ────────────────────────────────────────
+# Players can use all game-related features
+p, player, access_dashboard
+p, player, access_games
+
+# ── admin permissions ─────────────────────────────────────────
+# Admins can use the admin panel
+p, admin, access_admin
+
+# ── role inheritance ──────────────────────────────────────────
+# admin inherits ALL permissions from player.
+# LEARN: This is the power of RBAC hierarchy. You don't repeat player's permissions
+# for admin — you just say "admin can do everything player can, plus more."
+g, admin, player

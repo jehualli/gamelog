@@ -1,0 +1,127 @@
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <a href="/games/{{.Game.ID}}" class="text-gray-500 hover:text-white text-sm transition-colors">← {{.Game.Title}}</a>
+    <span class="text-gray-700">/</span>
+    <h1 class="text-2xl font-bold">New Journal Entry</h1>
+  </div>
+
+  <div class="card p-6 rounded-2xl">
+    <form method="POST" action="/games/{{.Game.ID}}/entries" enctype="multipart/form-data" class="space-y-5">
+
+      <!-- Stage / location -->
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">
+          📍 Current Stage
+          <span class="text-gray-600 font-normal">— level, boss, chapter, area...</span>
+        </label>
+        <input class="input" type="text" name="stage" placeholder="e.g. Margit the Fell Omen, Chapter 3, Floor 17...">
+      </div>
+
+      <!-- Notes / observations -->
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">
+          📝 Notes
+          <span class="text-gray-600 font-normal">— observations, strategies, questions you have</span>
+        </label>
+        <textarea class="input" name="notes" rows="4"
+          placeholder="What did you discover? What do you want to remember? Any questions you have about the mechanics?"></textarea>
+      </div>
+
+      <!-- Impediment -->
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">
+          ⚠ Impediment
+          <span class="text-gray-600 font-normal">— what's blocking or frustrating you?</span>
+        </label>
+        <textarea class="input" name="impediment" rows="2"
+          placeholder="e.g. Boss pattern unclear, lag spikes, don't understand this mechanic..."></textarea>
+      </div>
+
+      <!-- Emotion picker — interactive! -->
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">
+          💭 How are you feeling about this game right now?
+        </label>
+        <!-- Hidden input holds the selected value -->
+        <input type="hidden" name="emotion" id="emotionInput" value="">
+        <div class="grid grid-cols-5 gap-2" id="emotionPicker">
+          <button type="button" data-emotion="excited"     class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Excited">
+            <span class="text-2xl block">😄</span><span class="text-xs text-gray-500 mt-1 block">Excited</span>
+          </button>
+          <button type="button" data-emotion="frustrated"  class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Frustrated">
+            <span class="text-2xl block">😤</span><span class="text-xs text-gray-500 mt-1 block">Frustrated</span>
+          </button>
+          <button type="button" data-emotion="focused"     class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Focused">
+            <span class="text-2xl block">🎯</span><span class="text-xs text-gray-500 mt-1 block">Focused</span>
+          </button>
+          <button type="button" data-emotion="anxious"     class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Anxious">
+            <span class="text-2xl block">😰</span><span class="text-xs text-gray-500 mt-1 block">Anxious</span>
+          </button>
+          <button type="button" data-emotion="in_the_zone" class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="In the zone">
+            <span class="text-2xl block">🎮</span><span class="text-xs text-gray-500 mt-1 block">In the Zone</span>
+          </button>
+          <button type="button" data-emotion="mind_blown"  class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Mind blown">
+            <span class="text-2xl block">🤯</span><span class="text-xs text-gray-500 mt-1 block">Mind Blown</span>
+          </button>
+          <button type="button" data-emotion="bored"       class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Bored">
+            <span class="text-2xl block">😴</span><span class="text-xs text-gray-500 mt-1 block">Bored</span>
+          </button>
+          <button type="button" data-emotion="confident"   class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Confident">
+            <span class="text-2xl block">😎</span><span class="text-xs text-gray-500 mt-1 block">Confident</span>
+          </button>
+          <button type="button" data-emotion="confused"    class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Confused">
+            <span class="text-2xl block">😕</span><span class="text-xs text-gray-500 mt-1 block">Confused</span>
+          </button>
+          <button type="button" data-emotion="triumphant"  class="emotion-btn p-2 rounded-lg bg-gray-800 hover:bg-violet-500/20 border border-gray-700 hover:border-violet-500/50 text-center transition-all" title="Triumphant">
+            <span class="text-2xl block">🎉</span><span class="text-xs text-gray-500 mt-1 block">Triumphant</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Screenshot upload -->
+      {{if .CloudinaryEnabled}}
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">
+          📸 Screenshot
+          <span class="text-gray-600 font-normal">— upload to Cloudinary</span>
+        </label>
+        <input class="input py-2" type="file" name="screenshot" accept="image/*">
+        <p class="text-xs text-gray-600 mt-1">
+          ☁️ File → Go handler → Cloudinary SDK → CDN URL → stored in DB
+        </p>
+      </div>
+      {{else}}
+      <div class="p-3 bg-gray-900 rounded-lg text-xs text-gray-500">
+        ☁️ Screenshot upload disabled — add Cloudinary credentials to .env to enable.
+      </div>
+      {{end}}
+
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="btn-primary px-8 py-2.5">Save Entry</button>
+        <a href="/games/{{.Game.ID}}" class="btn-ghost px-6 py-2.5">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script>
+// Emotion picker: clicking an emoji selects it and highlights it
+document.querySelectorAll('.emotion-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Clear all selections
+    document.querySelectorAll('.emotion-btn').forEach(b => {
+      b.classList.remove('bg-violet-600', 'border-violet-500', 'scale-105');
+      b.classList.add('bg-gray-800', 'border-gray-700');
+    });
+    // Select clicked one
+    btn.classList.add('bg-violet-600', 'border-violet-500', 'scale-105');
+    btn.classList.remove('bg-gray-800', 'border-gray-700');
+    // Update hidden input
+    document.getElementById('emotionInput').value = btn.dataset.emotion;
+  });
+});
+</script>
+{{end}}

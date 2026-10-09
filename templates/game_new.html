@@ -1,0 +1,83 @@
+{{define "content"}}
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <a href="/dashboard" class="text-gray-500 hover:text-white transition-colors text-sm">← Dashboard</a>
+    <span class="text-gray-700">/</span>
+    <h1 class="text-2xl font-bold">Add Game</h1>
+  </div>
+
+  <div class="card p-6 rounded-2xl">
+    <!-- enctype="multipart/form-data" is required for file uploads -->
+    <form method="POST" action="/games" enctype="multipart/form-data" class="space-y-5">
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
+          <label class="block text-sm text-gray-400 mb-1">Game Title <span class="text-red-400">*</span></label>
+          <input class="input" type="text" name="title" required autofocus placeholder="e.g. Elden Ring">
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Platform</label>
+          <select class="input" name="platform">
+            <option value="">Select platform</option>
+            <option>PC</option>
+            <option>PlayStation 5</option>
+            <option>PlayStation 4</option>
+            <option>Xbox Series X</option>
+            <option>Xbox One</option>
+            <option>Nintendo Switch</option>
+            <option>Mobile</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Genre</label>
+          <input class="input" type="text" name="genre" placeholder="e.g. RPG, FPS, Souls-like">
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Status</label>
+          <select class="input" name="status">
+            <option value="playing">🎮 Playing</option>
+            <option value="backlog">📋 Backlog</option>
+            <option value="paused">⏸ Paused</option>
+            <option value="completed">✅ Completed</option>
+            <option value="dropped">🗑 Dropped</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-400 mb-1">Rating (0 = unrated)</label>
+          <input class="input" type="number" name="rating" min="0" max="10" value="0" placeholder="0–10">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">General Notes</label>
+        <textarea class="input" name="notes" rows="3" placeholder="Your first impressions, why you're playing this..."></textarea>
+      </div>
+
+      {{if .CloudinaryEnabled}}
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Cover Image</label>
+        <input class="input py-2" type="file" name="cover_image" accept="image/*">
+        <p class="text-xs text-gray-600 mt-1">
+          ☁️ Cloudinary: image uploaded to CDN, stored as a URL in the DB.
+          Auto-resized to max 800px wide.
+        </p>
+      </div>
+      {{else}}
+      <div class="p-3 bg-gray-900 rounded-lg text-xs text-gray-500">
+        ☁️ Cover image upload disabled — add Cloudinary credentials to .env to enable it.
+      </div>
+      {{end}}
+
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="btn-primary px-8 py-2.5">Save Game</button>
+        <a href="/dashboard" class="btn-ghost px-6 py-2.5">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{{end}}
